@@ -6,32 +6,41 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.os.SystemClock;
 
-import Formes.Carré;
+import java.util.ArrayList;
+import java.util.List;
+
+import Formes.Croix;
+import Formes.Gemme;
+import Formes.Rubis;
 import Formes.Triangle;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
-    private Triangle mTriangle;
-    private Carré mCarré;
+    private List<Objet> objetsScenes;
 
     // Matrices Model/View/Projection
     private final float[] vPMatrix = new float[16];
     private final float[] projectionMatrix = new float[16];
     private final float[] viewMatrix = new float[16];
+    private final float[] mModelMatrix = new float[16];
 
     //Appelé lors du setup de la l'environnement
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         //Initialise les formes
-        mTriangle = new Triangle();
-        mCarré = new Carré();
+        objetsScenes = new ArrayList<Objet>();
+
+        Objet obj_1 = new Objet(new Croix(), -0.3f, 0.0f, 0.2f);
+        objetsScenes.add(obj_1);
+        Objet obj_2 = new Objet(new Triangle(), -0.0f, 0.0f, 0.05f);
+        objetsScenes.add(obj_2);
+        Objet obj_3 = new Objet(new Rubis(), 0.3f, 0.0f, 0.15f);
+        objetsScenes.add(obj_3);
     }
 
     //Appelé à chaque frame
-    @Override
     public void onDrawFrame(GL10 unused) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
@@ -41,11 +50,26 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Calculate the projection and view transformation
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
-        mTriangle.draw(vPMatrix);
+        //Deplacement des objets de la scene
+        float[] scratch;
+
+        for (Objet item : objetsScenes) {
+
+            //Matrice de déplacement
+            scratch = new float[16];
+            Matrix.setIdentityM(mModelMatrix, 0);
+            Matrix.translateM(mModelMatrix, 0, item.getPosition()[0], item.getPosition()[1], 0);
+            Matrix.multiplyMM(scratch, 0, vPMatrix, 0, mModelMatrix, 0);
+
+            //Scale
+            Matrix.scaleM(scratch, 0, item.getEchelle()[0], item.getEchelle()[1], 1);
+
+            //Dessin
+            item.draw(scratch);
+        }
     }
 
     //Appelé quand la view change aka on tourne le téléphone
-    @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
         float ratio = (float) width / height;

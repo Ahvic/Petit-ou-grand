@@ -1,40 +1,23 @@
 package Formes;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.ShortBuffer;
+public class Carré extends Forme_basic {
 
-public class Carré {
+    static float formeCoords[] = {
+            -1.0f,  1.0f, 0.0f,   // top left
+            -1.0f, -1.0f, 0.0f,   // bottom left
+             1.0f, -1.0f, 0.0f,   // bottom right
+             1.0f,  1.0f, 0.0f }; // top right}
 
-    private FloatBuffer vertexBuffer;
-    private ShortBuffer drawListBuffer;
+    // Set color with red, green, blue and alpha (opacity) values
+    static float color[] = { 0.00000000f, 1.00000000f, 0.00000000f, 1.0f };
+    static private short drawOrder[] = { 0, 1, 2, 0, 2, 3 };
 
-    // number of coordinates per vertex in this array
-    static final int COORDS_PER_VERTEX = 3;
-    static float squareCoords[] = {
-            -0.5f,  0.5f, 0.0f,   // top left
-            -0.5f, -0.5f, 0.0f,   // bottom left
-            +0.5f, -0.5f, 0.0f,   // bottom right
-            +0.5f,  0.5f, 0.0f }; // top right
+    public Carré(){
+        super(formeCoords, drawOrder, color);
+    }
 
-    private short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
-
-    public Carré() {
-        // initialize vertex byte buffer for shape coordinates
-        // (# of coordinate values * 4 bytes per float)
-        ByteBuffer bb = ByteBuffer.allocateDirect(squareCoords.length * 4);
-        bb.order(ByteOrder.nativeOrder());
-        vertexBuffer = bb.asFloatBuffer();
-        vertexBuffer.put(squareCoords);
-        vertexBuffer.position(0);
-
-        // initialize byte buffer for the draw list
-        // (# of coordinate values * 2 bytes per short)
-        ByteBuffer dlb = ByteBuffer.allocateDirect(drawOrder.length * 2);
-        dlb.order(ByteOrder.nativeOrder());
-        drawListBuffer = dlb.asShortBuffer();
-        drawListBuffer.put(drawOrder);
-        drawListBuffer.position(0);
+    @Override
+    public void draw(float[] mvpMatrix) {
+        super.draw(mvpMatrix);
     }
 }
