@@ -2,6 +2,7 @@ package Formes;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.example.petitougrand.MyGLRenderer;
 

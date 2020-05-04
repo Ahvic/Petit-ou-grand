@@ -6,10 +6,16 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
+import Formes.Carré;
 import Formes.Croix;
 import Formes.Gemme;
 import Formes.Rubis;
@@ -17,7 +23,7 @@ import Formes.Triangle;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
-    private List<Objet> objetsScenes;
+    private Map<String, Objet> objetsScenes;
 
     // Matrices Model/View/Projection
     private final float[] vPMatrix = new float[16];
@@ -30,14 +36,23 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         //Initialise les formes
-        objetsScenes = new ArrayList<Objet>();
+        objetsScenes = new HashMap<String, Objet>();
 
+        //Les références
+
+        //On crée le haut de la pile et la carte cachée
         Objet obj_1 = new Objet(new Croix(), -0.3f, 0.0f, 0.2f);
-        objetsScenes.add(obj_1);
+        objetsScenes.put("Caché", obj_1);
         Objet obj_2 = new Objet(new Triangle(), -0.0f, 0.0f, 0.05f);
-        objetsScenes.add(obj_2);
-        Objet obj_3 = new Objet(new Rubis(), 0.3f, 0.0f, 0.15f);
-        objetsScenes.add(obj_3);
+        objetsScenes.put("Réference", obj_2);
+
+        //Les boutons
+        Objet obj_3 = new Objet(new Carré(), -0.3f, -0.8f, 0.10f);
+        objetsScenes.put("Inférieur", obj_3);
+        Objet obj_4 = new Objet(new Carré(), 0.0f, -0.8f, 0.10f);
+        objetsScenes.put("Egal", obj_4);
+        Objet obj_5 = new Objet(new Carré(), 0.3f, -0.8f, 0.10f);
+        objetsScenes.put("Supérieur", obj_5);
     }
 
     //Appelé à chaque frame
@@ -53,7 +68,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         //Deplacement des objets de la scene
         float[] scratch;
 
-        for (Objet item : objetsScenes) {
+        for (String nom : objetsScenes.keySet()) {
+            Objet item = objetsScenes.get(nom);
 
             //Matrice de déplacement
             scratch = new float[16];
@@ -90,5 +106,30 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glCompileShader(shader);
 
         return shader;
+    }
+
+    //Responasble de gérer les inputs
+    //Gere mal quand on tourne l'écran
+    //L'écriture en dur est loin d'être optimale mais c'est juste une preuve qu'on sait prendre des inputs
+    public void onInput(float x, float y) {
+
+        if(y < -7 && y > -9){
+            //Log.d("BOUTONS", x + "");
+
+            //Moins
+            if(x > -7.0 && x < -4.0){
+                Log.d("BOUTONS", " THE MINUS HAVE BEEN PRESSED " + x + " " + y );
+            }
+
+            //Egal
+            if(x > -1.5 && x < 1.5){
+                Log.d("BOUTONS", " EQUALITY HAVE BEEN ACHIEVED " + x + " " + y );
+            }
+
+            //Plus
+            if(x > 4.0 && x < 7.0){
+                Log.d("BOUTONS", " MORE IS THE ONLY WAY " + x + " " + y );
+            }
+        }
     }
 }
