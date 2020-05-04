@@ -3,7 +3,7 @@ package com.example.petitougrand;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
@@ -33,7 +33,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     //Appelé lors du setup de la l'environnement
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
-        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        GLES30.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         //Initialise les formes
         objetsScenes = new HashMap<String, Objet>();
@@ -41,11 +41,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         //Les références
 
         //On crée le haut de la pile et la carte cachée
-        Objet obj_1 = new Objet(new Croix(), -0.3f, 0.0f, 0.2f);
+        Objet obj_1 = new Objet(new Carré(), 0.0f, 0.0f, 1f);
         objetsScenes.put("Caché", obj_1);
-        Objet obj_2 = new Objet(new Triangle(), -0.0f, 0.0f, 0.05f);
+        Objet obj_2 = new Objet(new Carré(), 2.0f, 2.0f, 1f);
         objetsScenes.put("Réference", obj_2);
 
+        /*
         //Les boutons
         Objet obj_3 = new Objet(new Carré(), -0.3f, -0.8f, 0.10f);
         objetsScenes.put("Inférieur", obj_3);
@@ -53,14 +54,15 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         objetsScenes.put("Egal", obj_4);
         Objet obj_5 = new Objet(new Carré(), 0.3f, -0.8f, 0.10f);
         objetsScenes.put("Supérieur", obj_5);
+        */
     }
 
     //Appelé à chaque frame
     public void onDrawFrame(GL10 unused) {
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
 
         // Set the camera position (View matrix)
-        Matrix.setLookAtM(viewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.setIdentityM(viewMatrix,0);
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
@@ -87,23 +89,24 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     //Appelé quand la view change aka on tourne le téléphone
     public void onSurfaceChanged(GL10 unused, int width, int height) {
-        GLES20.glViewport(0, 0, width, height);
+        GLES30.glViewport(0, 0, width, height);
         float ratio = (float) width / height;
 
-        // this projection matrix is applied to object coordinates in the onDrawFrame() method
-        Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        Log.d("projection", "ratio: " + ratio);
+
+        Matrix.orthoM(projectionMatrix, 0, -10.0f * ratio, 10.0f * ratio, -10.0f, 10.0f, -1.0f, 1.0f);
     }
 
     //Fonction utilitaire pour charger les shaders
     public static int loadShader(int type, String shaderCode){
 
-        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
-        int shader = GLES20.glCreateShader(type);
+        // create a vertex shader type (GLES30.GL_VERTEX_SHADER)
+        // or a fragment shader type (GLES30.GL_FRAGMENT_SHADER)
+        int shader = GLES30.glCreateShader(type);
 
         // add the source code to the shader and compile it
-        GLES20.glShaderSource(shader, shaderCode);
-        GLES20.glCompileShader(shader);
+        GLES30.glShaderSource(shader, shaderCode);
+        GLES30.glCompileShader(shader);
 
         return shader;
     }
