@@ -1,5 +1,7 @@
 package Formes;
 
+
+
 public class Carré extends Forme_basic {
 
     static float formeCoords[] = {
@@ -14,6 +16,10 @@ public class Carré extends Forme_basic {
 
     public Carré(){
         super(formeCoords, drawOrder, color);
+    }
+
+    public Carré(float[] couleur){
+        super(formeCoords, drawOrder, couleur);
     }
 
     @Override

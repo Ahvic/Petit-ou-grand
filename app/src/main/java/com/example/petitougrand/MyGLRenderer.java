@@ -53,15 +53,21 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         objetsScenes.put("Réference", obj_2);
 
         //Les boutons
-        Bouton obj_3 = new Bouton_Inférieur(new Carré(), -3.5f, -7.0f, 1.0f);
-        objetsScenes.put("Inférieur", obj_3);
-        boutonsScenes.add(obj_3);
-        Bouton obj_4 = new Bouton_Egal(new Carré(), 0.0f, -7.0f, 1.0f);
-        objetsScenes.put("Egal", obj_4);
-        boutonsScenes.add(obj_4);
-        Bouton obj_5 = new Bouton_Supérieur(new Carré(), 3.5f, -7.0f, 1.0f);
-        objetsScenes.put("Supérieur", obj_5);
-        boutonsScenes.add(obj_5);
+        float couleur_inférieur[] = { 1.00000000f, 0.00000000f, 0.00000000f, 1.0f };
+        float couleur_egal[] = { 1.00000000f, 1.00000000f, 0.00000000f, 1.0f };
+        float couleur_supérieur[] = { 0.00000000f, 1.00000000f, 0.00000000f, 1.0f };
+
+        Bouton bouton_inférieur = new Bouton_Inférieur(new Carré(couleur_inférieur), -3.5f, -7.0f, 1.0f);
+        Bouton bouton_egal = new Bouton_Egal(new Carré(couleur_egal), 0.0f, -7.0f, 1.0f);
+        Bouton bouton_supérieur = new Bouton_Supérieur(new Carré(couleur_supérieur), 3.5f, -7.0f, 1.0f);
+
+        objetsScenes.put("Inférieur", bouton_inférieur);
+        objetsScenes.put("Egal", bouton_egal);
+        objetsScenes.put("Supérieur", bouton_supérieur);
+
+        boutonsScenes.add(bouton_inférieur);
+        boutonsScenes.add(bouton_egal);
+        boutonsScenes.add(bouton_supérieur);
     }
 
     //Appelé à chaque frame
