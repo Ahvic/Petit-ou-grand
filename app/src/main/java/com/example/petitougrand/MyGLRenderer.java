@@ -15,6 +15,10 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import Boutons.Bouton;
+import Boutons.Bouton_Egal;
+import Boutons.Bouton_Inférieur;
+import Boutons.Bouton_Supérieur;
 import Formes.Carré;
 import Formes.Croix;
 import Formes.Gemme;
@@ -24,6 +28,7 @@ import Formes.Triangle;
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private Map<String, Objet> objetsScenes;
+    private List<Bouton> boutonsScenes;
 
     // Matrices Model/View/Projection
     private final float[] vPMatrix = new float[16];
@@ -37,6 +42,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         //Initialise les formes
         objetsScenes = new HashMap<String, Objet>();
+        boutonsScenes = new ArrayList<>();
 
         //Les références
 
@@ -46,15 +52,16 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Objet obj_2 = new Objet(new Carré(), 2.0f, 2.0f, 1f);
         objetsScenes.put("Réference", obj_2);
 
-        /*
         //Les boutons
-        Objet obj_3 = new Objet(new Carré(), -0.3f, -0.8f, 0.10f);
+        Bouton obj_3 = new Bouton_Inférieur(new Carré(), -3.5f, -7.0f, 1.0f);
         objetsScenes.put("Inférieur", obj_3);
-        Objet obj_4 = new Objet(new Carré(), 0.0f, -0.8f, 0.10f);
+        boutonsScenes.add(obj_3);
+        Bouton obj_4 = new Bouton_Egal(new Carré(), 0.0f, -7.0f, 1.0f);
         objetsScenes.put("Egal", obj_4);
-        Objet obj_5 = new Objet(new Carré(), 0.3f, -0.8f, 0.10f);
+        boutonsScenes.add(obj_4);
+        Bouton obj_5 = new Bouton_Supérieur(new Carré(), 3.5f, -7.0f, 1.0f);
         objetsScenes.put("Supérieur", obj_5);
-        */
+        boutonsScenes.add(obj_5);
     }
 
     //Appelé à chaque frame
@@ -92,8 +99,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES30.glViewport(0, 0, width, height);
         float ratio = (float) width / height;
 
-        Log.d("projection", "ratio: " + ratio);
-
         Matrix.orthoM(projectionMatrix, 0, -10.0f * ratio, 10.0f * ratio, -10.0f, 10.0f, -1.0f, 1.0f);
     }
 
@@ -113,26 +118,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     //Responasble de gérer les inputs
     //Gere mal quand on tourne l'écran
-    //L'écriture en dur est loin d'être optimale mais c'est juste une preuve qu'on sait prendre des inputs
     public void onInput(float x, float y) {
 
-        if(y < -7 && y > -9){
-            //Log.d("BOUTONS", x + "");
+        Log.d("BOUTONS", "x: " + x + " y: " + y);
 
-            //Moins
-            if(x > -7.0 && x < -4.0){
-                Log.d("BOUTONS", " THE MINUS HAVE BEEN PRESSED " + x + " " + y );
-            }
-
-            //Egal
-            if(x > -1.5 && x < 1.5){
-                Log.d("BOUTONS", " EQUALITY HAVE BEEN ACHIEVED " + x + " " + y );
-            }
-
-            //Plus
-            if(x > 4.0 && x < 7.0){
-                Log.d("BOUTONS", " MORE IS THE ONLY WAY " + x + " " + y );
-            }
+        for (Bouton item: boutonsScenes) {
+            item.Action(x, y);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.petitougrand;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class MyGLSurfaceView extends GLSurfaceView {
@@ -32,15 +33,18 @@ public class MyGLSurfaceView extends GLSurfaceView {
         float screen_y = getHeight();
 
         /* Conversion des coordonnées pixel en coordonnées OpenGL
-        Attention l'axe x est inversé par rapport à OpenGLSL
-        On suppose que l'écran correspond à un carré d'arête 2 centré en 0
+        On applique un ratio pour prendre en compte que l'écran n'est pas un carré
          */
 
-        float x_opengl = +20.0f*x/getWidth() - 10.0f;
-        float y_opengl = -20.0f*y/getHeight() + 10.0f;
+        float ratio = (float) screen_x / screen_y;
+
+        float x_opengl = (+20.0f * x/getWidth() - 10.0f) * ratio;
+        float y_opengl = -20.0f * y/getHeight() + 10.0f;
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                Log.d("BOUTONS", screen_x + " " + screen_y + " " + ratio);
+
                 renderer.onInput(x_opengl, y_opengl);
                 requestRender();
         }

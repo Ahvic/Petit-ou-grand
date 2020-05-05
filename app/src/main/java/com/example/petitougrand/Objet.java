@@ -3,15 +3,15 @@ package com.example.petitougrand;
 import Formes.Forme_basic;
 
 /*
-* Simplifie la déclaration d'un nouvel objet
-* */
+ * Simplifie la déclaration d'un nouvel objet
+ * */
 
 public class Objet {
 
-    private Forme_basic forme;
-    private float[] position;
+    protected Forme_basic forme;
+    protected float[] position;
 
-    private float[] echelle;
+    protected float[] echelle;
 
     public Objet(Forme_basic f, float x, float y){
         this.forme = f;
