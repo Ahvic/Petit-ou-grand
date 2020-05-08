@@ -1,4 +1,4 @@
-package Formes;
+package com.example.petitougrand.Modèle.Formes;
 
 public class Croix extends Forme_basic {
 
@@ -20,9 +20,10 @@ public class Croix extends Forme_basic {
     // Set color with red, green, blue and alpha (opacity) values
     static float color[] = { 1.00000000f, 0.00000000f, 0.20000000f, 1.0f };
     static private short drawOrder[] = { 0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6, 0, 6, 7, 0, 7, 8, 0, 8, 9, 0, 9, 10, 0, 10, 11, 0, 11, 12, 0, 12, 1 };
+    static float echelleRelative = 1.8f;
 
     public Croix(){
-        super(formeCoords, drawOrder, color);
+        super(formeCoords, drawOrder, color, echelleRelative);
     }
 
     @Override

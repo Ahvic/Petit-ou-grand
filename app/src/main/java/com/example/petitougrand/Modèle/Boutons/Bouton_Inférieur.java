@@ -1,8 +1,8 @@
-package Boutons;
+package com.example.petitougrand.Modèle.Boutons;
 
 import android.util.Log;
 
-import Formes.Forme_basic;
+import com.example.petitougrand.Modèle.Formes.Forme_basic;
 
 public class Bouton_Inférieur extends Bouton {
 

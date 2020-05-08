@@ -1,4 +1,4 @@
-package Formes;
+package com.example.petitougrand.Modèle.Formes;
 
 
 
@@ -13,9 +13,10 @@ public class Carré extends Forme_basic {
     // Set color with red, green, blue and alpha (opacity) values
     static float color[] = { 0.00000000f, 1.00000000f, 0.00000000f, 1.0f };
     static private short drawOrder[] = { 0, 1, 2, 0, 2, 3 };
+    static float echelleRelative = 2.0f;
 
     public Carré(){
-        super(formeCoords, drawOrder, color);
+        super(formeCoords, drawOrder, color, echelleRelative);
     }
 
     public Carré(float[] couleur){

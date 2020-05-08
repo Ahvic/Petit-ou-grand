@@ -1,4 +1,4 @@
-package Formes;
+package com.example.petitougrand.Modèle.Formes;
 
 public class Pentagone extends Forme_basic {
 
@@ -13,9 +13,10 @@ public class Pentagone extends Forme_basic {
     // Set color with red, green, blue and alpha (opacity) values
     static float color[] = { 1.00000000f, 0.00000000f, 0.00000000f, 1.0f };
     static private short drawOrder[] = { 0, 1, 2, 0, 2, 3, 0, 3, 5, 0, 5, 4, 0, 4, 1};
+    static float echelleRelative = 1.2f;
 
     public Pentagone(){
-        super(formeCoords, drawOrder, color);
+        super(formeCoords, drawOrder, color, echelleRelative);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.petitougrand;
+package com.example.petitougrand.Vue;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;

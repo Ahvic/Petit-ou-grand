@@ -1,4 +1,4 @@
-package com.example.petitougrand;
+package com.example.petitougrand.Vue;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -9,21 +9,17 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import Boutons.Bouton;
-import Boutons.Bouton_Egal;
-import Boutons.Bouton_Inférieur;
-import Boutons.Bouton_Supérieur;
-import Formes.Carré;
-import Formes.Croix;
-import Formes.Gemme;
-import Formes.Rubis;
-import Formes.Triangle;
+import com.example.petitougrand.Modèle.Boutons.Bouton;
+import com.example.petitougrand.Modèle.Boutons.Bouton_Egal;
+import com.example.petitougrand.Modèle.Boutons.Bouton_Inférieur;
+import com.example.petitougrand.Modèle.Boutons.Bouton_Supérieur;
+import com.example.petitougrand.Modèle.Formes.Carré;
+import com.example.petitougrand.Modèle.Formes.Croix;
+import com.example.petitougrand.Modèle.Objet;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
@@ -47,9 +43,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         //Les références
 
         //On crée le haut de la pile et la carte cachée
-        Objet obj_1 = new Objet(new Carré(), 0.0f, 0.0f, 1f);
+        Objet obj_1 = new Objet(new Carré(), 0.0f, 0.0f);
         objetsScenes.put("Caché", obj_1);
-        Objet obj_2 = new Objet(new Carré(), 2.0f, 2.0f, 1f);
+        Objet obj_2 = new Objet(new Croix(), 2.0f, 2.0f);
         objetsScenes.put("Réference", obj_2);
 
         //Les boutons
@@ -70,6 +66,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         boutonsScenes.add(bouton_supérieur);
     }
 
+    private boolean input = false;
+
     //Appelé à chaque frame
     public void onDrawFrame(GL10 unused) {
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
@@ -80,10 +78,18 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Calculate the projection and view transformation
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
+        if(input){
+            Objet obj_3 = new Objet(new Croix(), -2.0f, 2.0f);
+            objetsScenes.put("Réference", obj_3);
+            input = false;
+        }
+
         //Deplacement des objets de la scene
         float[] scratch;
 
         for (String nom : objetsScenes.keySet()) {
+            Log.e("SPAWN", "nb objet: " + objetsScenes.size());
+
             Objet item = objetsScenes.get(nom);
 
             //Matrice de déplacement
@@ -126,10 +132,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     //Gere mal quand on tourne l'écran
     public void onInput(float x, float y) {
 
-        Log.d("BOUTONS", "x: " + x + " y: " + y);
+        //Log.d("BOUTONS", "x: " + x + " y: " + y);
 
-        for (Bouton item: boutonsScenes) {
-            item.Action(x, y);
-        }
+        //for (Bouton item: boutonsScenes) {
+        //    item.Action(x, y);
+        //}
+
+        Log.e("SPAWN", "ici");
+
+        input = true;
     }
 }

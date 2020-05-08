@@ -4,7 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.view.Window;
+
+import com.example.petitougrand.Vue.MyGLSurfaceView;
 
 public class MainActivity extends AppCompatActivity {
 

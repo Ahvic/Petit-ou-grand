@@ -1,10 +1,9 @@
-package Formes;
+package com.example.petitougrand.Modèle.Formes;
 
-import android.opengl.GLES20;
-import android.opengl.Matrix;
-import android.util.Log;
+import android.opengl.GLES30;
+import android.opengl.GLES30;
 
-import com.example.petitougrand.MyGLRenderer;
+import com.example.petitougrand.Vue.MyGLRenderer;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -34,6 +33,7 @@ public abstract class Forme_basic {
     // Set color with red, green, blue and alpha (opacity) values
     float color[] = { 1.00000000f, 0.00000000f, 0.00000000f, 1.0f };
     private short drawOrder[] = {};
+    public float echelleRelative;
     private final int mProgram;
 
     private FloatBuffer vertexBuffer;
@@ -60,18 +60,23 @@ public abstract class Forme_basic {
         drawListBuffer.position(0);
 
         // create empty OpenGL ES Program
-        mProgram = GLES20.glCreateProgram();
+        mProgram = GLES30.glCreateProgram();
 
         // Attache le vertexShader
-        int vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
-        GLES20.glAttachShader(mProgram, vertexShader);
+        int vertexShader = MyGLRenderer.loadShader(GLES30.GL_VERTEX_SHADER, vertexShaderCode);
+        GLES30.glAttachShader(mProgram, vertexShader);
 
         // Attache le fragmentShader
-        int fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
-        GLES20.glAttachShader(mProgram, fragmentShader);
+        int fragmentShader = MyGLRenderer.loadShader(GLES30.GL_FRAGMENT_SHADER, fragmentShaderCode);
+        GLES30.glAttachShader(mProgram, fragmentShader);
 
         // creates OpenGL ES program executables
-        GLES20.glLinkProgram(mProgram);
+        GLES30.glLinkProgram(mProgram);
+    }
+
+    public Forme_basic(float[] formeCoords, short[] drawOrder, float[] color, float echelleRelative) {
+        this(formeCoords, drawOrder, color);
+        this.echelleRelative = echelleRelative;
     }
 
     private int positionHandle;
@@ -80,28 +85,28 @@ public abstract class Forme_basic {
     private final int vertexStride = COORDS_PER_VERTEX * 4; // le pas entre 2 sommets : 4 bytes per vertex
 
     public void draw(float[] mvpMatrix) {
-        GLES20.glUseProgram(mProgram);
+        GLES30.glUseProgram(mProgram);
 
         // Récupère la position du shader
-        positionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
-        GLES20.glEnableVertexAttribArray(positionHandle);
-        GLES20.glVertexAttribPointer(positionHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, vertexStride, vertexBuffer);
+        positionHandle = GLES30.glGetAttribLocation(mProgram, "vPosition");
+        GLES30.glEnableVertexAttribArray(positionHandle);
+        GLES30.glVertexAttribPointer(positionHandle, COORDS_PER_VERTEX, GLES30.GL_FLOAT, false, vertexStride, vertexBuffer);
 
         /// Recupère la couleur du shader et l'applique
-        colorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
-        GLES20.glUniform4fv(colorHandle, 1, color, 0);
+        colorHandle = GLES30.glGetUniformLocation(mProgram, "vColor");
+        GLES30.glUniform4fv(colorHandle, 1, color, 0);
 
         // Récupère et applique la transformation
-        vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);
+        vPMatrixHandle = GLES30.glGetUniformLocation(mProgram, "uMVPMatrix");
+        GLES30.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);
 
         // Set color for drawing the triangle
-        GLES20.glUniform4fv(colorHandle, 1, color, 0);
+        GLES30.glUniform4fv(colorHandle, 1, color, 0);
 
         // Dessine le carré
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
+        GLES30.glDrawElements(GLES30.GL_TRIANGLES, drawOrder.length, GLES30.GL_UNSIGNED_SHORT, drawListBuffer);
 
         // Disable vertex array
-        GLES20.glDisableVertexAttribArray(positionHandle);
+        GLES30.glDisableVertexAttribArray(positionHandle);
     }
 }
