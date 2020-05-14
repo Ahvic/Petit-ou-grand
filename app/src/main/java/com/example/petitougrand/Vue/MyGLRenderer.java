@@ -6,32 +6,38 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.util.Log;
+import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.petitougrand.Controler.Controleur;
 import com.example.petitougrand.Modèle.Boutons.Bouton;
 import com.example.petitougrand.Modèle.Boutons.Bouton_Egal;
 import com.example.petitougrand.Modèle.Boutons.Bouton_Inférieur;
 import com.example.petitougrand.Modèle.Boutons.Bouton_Pass;
 import com.example.petitougrand.Modèle.Boutons.Bouton_Supérieur;
 import com.example.petitougrand.Modèle.Enum.EnumPlace;
+import com.example.petitougrand.Modèle.Enum.EnumPlaceRender;
 import com.example.petitougrand.Modèle.Enum.EnumType;
 import com.example.petitougrand.Vue.Formes.Carré;
 import com.example.petitougrand.Vue.Formes.Croix;
+import com.example.petitougrand.Vue.Formes.Forme_basic;
 import com.example.petitougrand.Vue.Formes.Gemme;
 import com.example.petitougrand.Vue.Formes.Pentagone;
 import com.example.petitougrand.Vue.Formes.Rubis;
 import com.example.petitougrand.Vue.Formes.Triangle;
 import com.example.petitougrand.Modèle.Objet;
 
+import static com.example.petitougrand.Modèle.Enum.EnumType.Caché;
+
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private Map<String, Objet> objetsScenes;            //emplacement, instance
-    private Map<String, String> fileAttente;            //emplacement, type
-    private Map<String, float[]> lstEmpls;     //correspondance nom, coordonées
+    private List<objet_Attente> fileAttente;            //type, emplacement
     private List<Bouton> boutonsScenes;
 
     // Matrices Model/View/Projection
@@ -46,22 +52,21 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         //Initialise les listes
         objetsScenes = new HashMap<>();
-        fileAttente = new HashMap<>();
-        lstEmpls = InitEmplacement();
+        fileAttente = new ArrayList<>();
         boutonsScenes = new ArrayList<>();
 
         //Références
-        objetsScenes.put("ref_0", new Objet(new Triangle(), lstEmpls.get("ref_0")[0], lstEmpls.get("ref_0")[1], 0.5f));
-        objetsScenes.put("ref_1", new Objet(new Carré(), lstEmpls.get("ref_1")[0], lstEmpls.get("ref_1")[1], 0.5f));
-        objetsScenes.put("ref_2", new Objet(new Pentagone(), lstEmpls.get("ref_2")[0], lstEmpls.get("ref_2")[1], 0.5f));
-        objetsScenes.put("ref_3", new Objet(new Rubis(), lstEmpls.get("ref_3")[0], lstEmpls.get("ref_3")[1], 0.5f));
-        objetsScenes.put("ref_4", new Objet(new Gemme(), lstEmpls.get("ref_4")[0], lstEmpls.get("ref_4")[1], 0.5f));
-        objetsScenes.put("ref_5", new Objet(new Croix(), lstEmpls.get("ref_5")[0], lstEmpls.get("ref_5")[1], 0.5f));
+        objetsScenes.put("ref_0", new Objet(new Triangle(), EnumPlaceRender.ref_0.position[0], EnumPlaceRender.ref_0.position[1], 0.5f));
+        objetsScenes.put("ref_1", new Objet(new Carré(), EnumPlaceRender.ref_1.position[0], EnumPlaceRender.ref_1.position[1], 0.5f));
+        objetsScenes.put("ref_2", new Objet(new Pentagone(), EnumPlaceRender.ref_2.position[0], EnumPlaceRender.ref_2.position[1], 0.5f));
+        objetsScenes.put("ref_3", new Objet(new Rubis(), EnumPlaceRender.ref_3.position[0], EnumPlaceRender.ref_3.position[1], 0.5f));
+        objetsScenes.put("ref_4", new Objet(new Gemme(), EnumPlaceRender.ref_4.position[0], EnumPlaceRender.ref_4.position[1], 0.5f));
+        objetsScenes.put("ref_5", new Objet(new Croix(), EnumPlaceRender.ref_5.position[0], EnumPlaceRender.ref_5.position[1], 0.5f));
 
         //J1, J2 et tas par défaut
-        objetsScenes.put("j_1", new Objet(new Carré(), lstEmpls.get("j_1")[0], lstEmpls.get("j_1")[1]));
-        objetsScenes.put("tas", new Objet(new Croix(), lstEmpls.get("tas")[0], lstEmpls.get("tas")[1]));
-        objetsScenes.put("j_2", new Objet(new Triangle(), lstEmpls.get("j_2")[0], lstEmpls.get("j_2")[1]));
+        objetsScenes.put("j_1", new Objet(new Carré(), EnumPlaceRender.j_1.position[0], EnumPlaceRender.j_1.position[1]));
+        objetsScenes.put("tas", new Objet(new Croix(), EnumPlaceRender.tas.position[0], EnumPlaceRender.tas.position[1]));
+        objetsScenes.put("j_2", new Objet(new Triangle(), EnumPlaceRender.j_2.position[0], EnumPlaceRender.j_2.position[1]));
 
         //Les boutons
         float couleur_inférieur[] = { 1.00000000f, 0.00000000f, 0.00000000f, 1.0f };
@@ -69,10 +74,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         float couleur_supérieur[] = { 0.00000000f, 1.00000000f, 0.00000000f, 1.0f };
         float couleur_pass[] = { 0.70000000f, 0.70000000f, 0.70000000f, 1.0f };
 
-        Bouton bouton_inférieur = new Bouton_Inférieur(new Carré(couleur_inférieur), lstEmpls.get("Inférieur")[0], lstEmpls.get("Inférieur")[1], 1.0f);
-        Bouton bouton_egal = new Bouton_Egal(new Carré(couleur_egal), lstEmpls.get("Egal")[0], lstEmpls.get("Egal")[1], 1.0f);
-        Bouton bouton_supérieur = new Bouton_Supérieur(new Carré(couleur_supérieur), lstEmpls.get("Supérieur")[0], lstEmpls.get("Supérieur")[1], 1.0f);
-        Bouton bouton_pass = new Bouton_Pass(new Carré(couleur_pass), lstEmpls.get("Pass")[0], lstEmpls.get("Pass")[1], 2.5f, 0.5f);
+        Bouton bouton_inférieur = new Bouton_Inférieur(new Carré(couleur_inférieur), EnumPlaceRender.Inférieur.position[0], EnumPlaceRender.Inférieur.position[1], 1.0f);
+        Bouton bouton_egal = new Bouton_Egal(new Carré(couleur_egal), EnumPlaceRender.Egal.position[0], EnumPlaceRender.Egal.position[1], 1.0f);
+        Bouton bouton_supérieur = new Bouton_Supérieur(new Carré(couleur_supérieur), EnumPlaceRender.Supérieur.position[0], EnumPlaceRender.Supérieur.position[1], 1.0f);
+        Bouton bouton_pass = new Bouton_Pass(new Carré(couleur_pass), EnumPlaceRender.Pass.position[0], EnumPlaceRender.Pass.position[1], 2.5f, 0.5f);
 
         objetsScenes.put("Inférieur", bouton_inférieur);
         objetsScenes.put("Egal", bouton_egal);
@@ -83,6 +88,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         boutonsScenes.add(bouton_egal);
         boutonsScenes.add(bouton_supérieur);
         boutonsScenes.add(bouton_pass);
+
+        //Préviens le controlleur qu'il a fini de s'initialiser
+        Controleur.getInstance().LancementModel();
     }
 
     //Appelé à chaque frame
@@ -96,27 +104,32 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
         //Initialisation des objets dans la file d'attente
-        for(String emplacement: fileAttente.keySet()) {
-            switch (fileAttente.get(emplacement)){
-                case "Triangle": objetsScenes.put(emplacement, new Objet(new Triangle(), lstEmpls.get(emplacement)[0], lstEmpls.get(emplacement)[1]));
-                     break;
-                case "Carré": objetsScenes.put(emplacement, new Objet(new Carré(), lstEmpls.get(emplacement)[0], lstEmpls.get(emplacement)[1]));
+
+        for (objet_Attente objet: fileAttente) {
+            Forme_basic forme;
+            float echelle = 1.0f;
+
+            switch (objet.forme){
+                case Triangle: forme = new Triangle();
                     break;
-                case "Pentagone": objetsScenes.put(emplacement, new Objet(new Pentagone(), lstEmpls.get(emplacement)[0], lstEmpls.get(emplacement)[1]));
+                case Carré: forme = new Carré();
                     break;
-                case "Rubis": objetsScenes.put(emplacement, new Objet(new Rubis(), lstEmpls.get(emplacement)[0], lstEmpls.get(emplacement)[1]));
+                case Pentagone: forme = new Pentagone();
                     break;
-                case "Gemme": objetsScenes.put(emplacement, new Objet(new Gemme(), lstEmpls.get(emplacement)[0], lstEmpls.get(emplacement)[1]));
+                case Rubis: forme = new Rubis();
                     break;
-                case "Croix": objetsScenes.put(emplacement, new Objet(new Croix(), lstEmpls.get(emplacement)[0], lstEmpls.get(emplacement)[1]));
+                case Gemme: forme = new Gemme();
                     break;
-                case "Caché": objetsScenes.put(emplacement, new Objet(new Croix(), lstEmpls.get(emplacement)[0], lstEmpls.get(emplacement)[1], 0));
+                case Croix: forme = new Croix();
                     break;
-                default:
-                    objetsScenes.remove(emplacement);
+                default: forme = new Carré();
+                    echelle = 0.0f;
+                    break;
             }
 
-            fileAttente.remove(emplacement);
+            Objet obj = new Objet(forme, objet.coords[0], objet.coords[1], echelle);
+
+            objetsScenes.put(objet.nom, obj);
         }
 
         //Deplacement des objets de la scene
@@ -171,58 +184,36 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
     }
 
+    //La fonction utilisés à l'extérieur pour donner des ordres au renderer
+    //Met a jour la liste d'attente
     public void aDessiner(EnumPlace emplacement, EnumType type){
-        String place = "";
-        String forme = "";
+        float[] place;
 
         switch (emplacement){
-            case j_1: place = "j_1";
+            case j_1: place = EnumPlaceRender.j_1.position;
                 break;
-            case tas: place = "tas";
+            case tas: place = EnumPlaceRender.tas.position;
                 break;
-            case j_2: place = "j_2";
+            case j_2: place = EnumPlaceRender.j_2.position;
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + emplacement);
         }
 
-        switch (type){
-            case Triangle: forme = "Triangle";
-                break;
-            case Carré: forme = "Carré";
-                break;
-            case Pentagone: forme = "Pentagone";
-                break;
-            case Rubis: forme = "Rubis";
-                break;
-            case Gemme: forme = "Gemme";
-                break;
-            case Croix: forme = "Croix";
-                break;
-            case Caché: forme = "Caché";
-                break;
-        }
+        objet_Attente a = new objet_Attente(place, type, emplacement.name());
 
-        fileAttente.put(place, forme);
+        fileAttente.add(a);
     }
 
-    private HashMap<String, float[]> InitEmplacement(){
-        HashMap<String, float[]> resultat = new HashMap<>();
+    private class objet_Attente{
+        public String nom;
+        public float[] coords;
+        public EnumType forme;
 
-        resultat.put("ref_0", new float[]{-4.0f, 8.0f});
-        resultat.put("ref_1", new float[]{-2.7f, 8.0f});
-        resultat.put("ref_2", new float[]{-1.4f, 8.0f});
-        resultat.put("ref_3", new float[]{-0.0f, 8.0f});
-        resultat.put("ref_4", new float[]{+1.3f, 8.0f});
-        resultat.put("ref_5", new float[]{+3.0f, 8.0f});
-
-        resultat.put("j_1", new float[]{-3.0f, 0.0f});
-        resultat.put("tas", new float[]{-0.0f, 0.0f});
-        resultat.put("j_2", new float[]{+3.0f, 0.0f});
-
-        resultat.put("Inférieur", new float[]{-3.5f, -7.0f});
-        resultat.put("Egal", new float[]{+0.0f, -7.0f});
-        resultat.put("Supérieur", new float[]{+3.5f, -7.0f});
-        resultat.put("Pass", new float[]{+0.0f, -9.0f});
-
-        return resultat;
+        public objet_Attente(float[] coords, EnumType forme, String nom){
+            this.coords = coords;
+            this.forme = forme;
+            this.nom = nom;
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.example.petitougrand.Controler;
 
+import android.util.Log;
+
 import com.example.petitougrand.Modèle.Enum.EnumType;
 import com.example.petitougrand.Modèle.Modèle_Jeu;
 
@@ -14,10 +16,12 @@ public class Controleur {
     private MyGLRenderer renderer;
 
     public Controleur(MyGLRenderer renderer){
-        // Responsable du déroulement de la partie
-        this.modele = new Modèle_Jeu(this);
         this.renderer = renderer;
         instance = this;
+    }
+
+    public void LancementModel(){
+        this.modele = new Modèle_Jeu(this);
     }
 
     public static Controleur getInstance(){
