@@ -1,4 +1,4 @@
-package com.example.petitougrand.Modèle.Formes;
+package com.example.petitougrand.Vue.Formes;
 
 public class Pentagone extends Forme_basic {
 

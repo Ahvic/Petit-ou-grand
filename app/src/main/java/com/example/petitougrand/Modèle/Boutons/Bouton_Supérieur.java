@@ -1,8 +1,7 @@
 package com.example.petitougrand.Modèle.Boutons;
 
-import android.util.Log;
-
-import com.example.petitougrand.Modèle.Formes.Forme_basic;
+import com.example.petitougrand.Controler.Controleur;
+import com.example.petitougrand.Vue.Formes.Forme_basic;
 
 public class Bouton_Supérieur extends Bouton {
 
@@ -11,9 +10,8 @@ public class Bouton_Supérieur extends Bouton {
     }
 
     @Override
-    public void Action(float x, float y) {
-        if(isTouched(x, y)){
-            Log.e("BOUTONS", "bouton supérieur touché");
-        }
+    public void Action() {
+        //Log.e("BOUTONS", "bouton supérieur touché");
+        Controleur.getInstance().ReceiveInput(+1);
     }
 }

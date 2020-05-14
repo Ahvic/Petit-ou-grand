@@ -1,6 +1,5 @@
-package com.example.petitougrand.Modèle.Formes;
+package com.example.petitougrand.Vue.Formes;
 
-import android.opengl.GLES30;
 import android.opengl.GLES30;
 
 import com.example.petitougrand.Vue.MyGLRenderer;
@@ -39,11 +38,12 @@ public abstract class Forme_basic {
     private FloatBuffer vertexBuffer;
     private ShortBuffer drawListBuffer;
 
-    public Forme_basic(float[] formeCoords, short[] drawOrder, float[] color) {
+    public Forme_basic(float[] formeCoords, short[] drawOrder, float[] color, float echelleRelative) {
 
         this.formeCoords = formeCoords;
         this.color = color;
         this.drawOrder = drawOrder;
+        this.echelleRelative = echelleRelative;
 
         // Initialise le buffer des vertex
         ByteBuffer bb = ByteBuffer.allocateDirect(formeCoords.length * 4);
@@ -72,11 +72,6 @@ public abstract class Forme_basic {
 
         // creates OpenGL ES program executables
         GLES30.glLinkProgram(mProgram);
-    }
-
-    public Forme_basic(float[] formeCoords, short[] drawOrder, float[] color, float echelleRelative) {
-        this(formeCoords, drawOrder, color);
-        this.echelleRelative = echelleRelative;
     }
 
     private int positionHandle;

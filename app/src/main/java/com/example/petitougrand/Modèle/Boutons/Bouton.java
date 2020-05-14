@@ -2,7 +2,7 @@ package com.example.petitougrand.Modèle.Boutons;
 
 import com.example.petitougrand.Modèle.Objet;
 
-import com.example.petitougrand.Modèle.Formes.Forme_basic;
+import com.example.petitougrand.Vue.Formes.Forme_basic;
 
 public abstract class Bouton extends Objet {
 
@@ -28,5 +28,5 @@ public abstract class Bouton extends Objet {
         return false;
     }
 
-    public abstract void Action(float x, float y);
+    public abstract void Action();
 }

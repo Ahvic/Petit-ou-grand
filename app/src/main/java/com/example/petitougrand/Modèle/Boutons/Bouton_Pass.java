@@ -2,7 +2,7 @@ package com.example.petitougrand.Modèle.Boutons;
 
 import com.example.petitougrand.Controler.Controleur;
 
-import com.example.petitougrand.Modèle.Formes.Forme_basic;
+import com.example.petitougrand.Vue.Formes.Forme_basic;
 
 public class Bouton_Pass extends Bouton {
 
@@ -11,7 +11,8 @@ public class Bouton_Pass extends Bouton {
     }
 
     @Override
-    public void Action(float x, float y) {
-
+    public void Action() {
+        //Log.e("BOUTONS", "bouton pass touché");
+        Controleur.getInstance().ReceiveInput(-2);
     }
 }

@@ -22,6 +22,10 @@ public class MyGLSurfaceView extends GLSurfaceView {
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
 
+    public MyGLRenderer getRenderer(){
+        return renderer;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent e) {
 
@@ -43,8 +47,6 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.d("BOUTONS", screen_x + " " + screen_y + " " + ratio);
-
                 renderer.onInput(x_opengl, y_opengl);
                 requestRender();
         }

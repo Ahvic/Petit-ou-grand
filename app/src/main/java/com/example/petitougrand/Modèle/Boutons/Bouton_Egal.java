@@ -1,8 +1,7 @@
 package com.example.petitougrand.Modèle.Boutons;
 
-import android.util.Log;
-
-import com.example.petitougrand.Modèle.Formes.Forme_basic;
+import com.example.petitougrand.Controler.Controleur;
+import com.example.petitougrand.Vue.Formes.Forme_basic;
 
 public class Bouton_Egal extends Bouton {
 
@@ -11,9 +10,8 @@ public class Bouton_Egal extends Bouton {
     }
 
     @Override
-    public void Action(float x, float y) {
-        if(isTouched(x, y)){
-            Log.e("BOUTONS", "bouton égal touché");
-        }
+    public void Action() {
+        //Log.e("BOUTONS", "bouton égal touché");
+        Controleur.getInstance().ReceiveInput(0);
     }
 }
