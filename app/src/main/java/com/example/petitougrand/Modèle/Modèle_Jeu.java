@@ -33,6 +33,8 @@ public class Modèle_Jeu {
         controleur.sendRendererOrder(EnumPlace.j_1, EnumType.Caché);
         controleur.sendRendererOrder(EnumPlace.j_2, EnumType.Caché);
         controleur.sendRendererOrder(EnumPlace.tas, tas.get(0));
+
+        Log.e("DECK", debugPaquet());
     }
 
     /**
@@ -40,35 +42,73 @@ public class Modèle_Jeu {
      *
      * @param pari -2 passe, -1 inférieur, 0 égal, 1 supérieur
      */
-    public void ReceptionChoix(int pari){
+    public void ReceptionChoix(int pari) {
 
         Log.e("DECK", "joueur: " + joueurActuel);
 
-        if(pari == -1 || pari == 0 || pari == 1){
-            if(PariGagne(pari)){
-                Log.e("DECK", "gagné");
+        if(PariGagne(pari))
+            Log.e("DECK", "gagne");
+        else
+            Log.e("DECK", "perdu");
 
-                //On affiche la carte
-                if(joueurActuel == 1)
-                    controleur.sendRendererOrder(EnumPlace.j_1, paquet_J1.get(0));
-                else
-                    controleur.sendRendererOrder(EnumPlace.j_2, paquet_J2.get(0));
+        /*
+        if (paquet_J1.size() > 0 && paquet_J2.size() > 0) {
+            if (pari == -1 || pari == 0 || pari == 1) {
+                if (PariGagne(pari)) {
+                    Log.e("DECK", "gagné");
 
-                //On l'ajoute au tas_temp
+                    //On affiche la carte
+                    if (joueurActuel == 1) {
+                        controleur.sendRendererOrder(EnumPlace.j_1, paquet_J1.get(0));
 
-            }else{
-                Log.e("DECK", "perdu");
+                        //On l'ajoute au tas_temp
+                        paquet_temp.add(paquet_J1.get(0));
+                        paquet_J1.remove(0);
 
-                //On remet tas_temp dans le tas du joueur
-                ChangementDeTour();
+                    } else {
+                        controleur.sendRendererOrder(EnumPlace.j_2, paquet_J2.get(0));
+
+                        //On l'ajoute au tas_temp
+                        paquet_temp.add(paquet_J2.get(0));
+                        paquet_J2.remove(0);
+                    }
+
+                } else {
+                    Log.e("DECK", "perdu");
+
+                    //On remet toutes les cartes dans le paquet
+                    for (EnumType element : paquet_temp) {
+                        if(joueurActuel == 1)
+                            paquet_J1.add(element);
+                        else
+                            paquet_J2.add(element);
+
+                        paquet_temp.remove(element);
+                    }
+
+                    ChangementDeTour();
+                }
             }
-        }
 
-        if(pari == -2){
-            ChangementDeTour();
+            if (pari == -2) {
+                ChangementDeTour();
 
-            //On met tas_temp dans le tas
+                //Met les cart de paquet_temps sur le tas
+                for (EnumType element : paquet_temp) {
+                    tas.add(element);
+                    paquet_temp.remove(element);
+                }
+
+                controleur.sendRendererOrder(EnumPlace.tas, tas.get(0));
+            }
+        }else{
+            controleur.sendRendererOrder(EnumPlace.j_1, EnumType.Rubis);
+            controleur.sendRendererOrder(EnumPlace.tas, EnumType.Rubis);
+            controleur.sendRendererOrder(EnumPlace.j_2, EnumType.Rubis);
         }
+        */
+
+        Log.e("DECK", debugPaquet());
     }
 
     /**
@@ -153,6 +193,21 @@ public class Modèle_Jeu {
             joueurActuel = 2;
         else
             joueurActuel = 1;
+    }
+
+    /**
+     * Donne les figues au sommet des paquets pour tricher
+     *
+     * @return String
+     */
+    private String debugPaquet(){
+        String resultat = "";
+
+        resultat += "\n \ntas: " + tas.get(0).name() + "\n";
+        resultat += "J_1: " + paquet_J1.get(0).name() + "\n";
+        resultat += "J_2: " + paquet_J2.get(0).name() + "\n";
+
+        return resultat;
     }
 
     public String toString(){
