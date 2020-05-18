@@ -15,7 +15,7 @@ public class Egal extends Forme_basic {
             +1.0f, -1.0f, 0.0f,   // 7
     };
     // Set color with red, green, blue and alpha (opacity) values
-    static float color[] = { 1.00000000f, 1.00000000f, 0.00000000f, 1.0f };
+    static float color[] = { 0.60000000f, 0.00000000f, 0.10000000f, 1.0f };
     static private short drawOrder[] = { 2, 1, 0, 3, 1, 2, 6, 5, 4, 7, 5, 6 };
     static float echelleRelative = 1.0f;
 
