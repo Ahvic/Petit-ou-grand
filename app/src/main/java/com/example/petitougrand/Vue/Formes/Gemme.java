@@ -1,4 +1,4 @@
-package Formes;
+package com.example.petitougrand.Vue.Formes;
 
 public class Gemme extends Forme_basic {
 
@@ -16,9 +16,10 @@ public class Gemme extends Forme_basic {
     // Set color with red, green, blue and alpha (opacity) values
     static float color[] = { 0.00000000f, 0.75000000f, 1.00000000f, 1.0f };
     static private short drawOrder[] = { 0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6, 0, 6, 7, 0, 7, 8, 0, 8, 1 };
+    static float echelleRelative = 1.6f;
 
     public Gemme(){
-        super(formeCoords, drawOrder, color);
+        super(formeCoords, drawOrder, color, echelleRelative);
     }
 
     @Override

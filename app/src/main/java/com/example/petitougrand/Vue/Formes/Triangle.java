@@ -1,4 +1,4 @@
-package Formes;
+package com.example.petitougrand.Vue.Formes;
 
 public class Triangle extends Forme_basic {
 
@@ -10,9 +10,10 @@ public class Triangle extends Forme_basic {
     // Set color with red, green, blue and alpha (opacity) values
     static float color[] = { 0.00000000f, 0.00000000f, 1.00000000f, 1.0f };
     static private short drawOrder[] = { 0, 1, 2 };
+    static float echelleRelative = 0.8f;
 
     public Triangle(){
-        super(formeCoords, drawOrder, color);
+        super(formeCoords, drawOrder, color, echelleRelative);
     }
 
     @Override

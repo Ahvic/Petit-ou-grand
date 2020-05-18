@@ -1,6 +1,6 @@
-package com.example.petitougrand;
+package com.example.petitougrand.Modèle;
 
-import Formes.Forme_basic;
+import com.example.petitougrand.Vue.Formes.Forme_basic;
 
 /*
  * Simplifie la déclaration d'un nouvel objet
@@ -10,7 +10,6 @@ public class Objet {
 
     protected Forme_basic forme;
     protected float[] position;
-
     protected float[] echelle;
 
     public Objet(Forme_basic f, float x, float y){
@@ -21,14 +20,20 @@ public class Objet {
         this.position[1] = y;
 
         this.echelle = new float[2];
-        this.echelle[0] = 1.0f;
-        this.echelle[1] = 1.0f;
+        this.echelle[0] = f.echelleRelative;
+        this.echelle[1] = f.echelleRelative;
     }
 
     public Objet(Forme_basic f, float x, float y, float echelle){
         this(f, x, y);
-        this.echelle[0] = echelle;
-        this.echelle[1] = echelle;
+        this.echelle[0] = echelle * f.echelleRelative;
+        this.echelle[1] = echelle * f.echelleRelative;
+    }
+
+    public Objet(Forme_basic f, float x, float y, float echelleX, float echelleY){
+        this(f, x, y);
+        this.echelle[0] = echelleX * f.echelleRelative;
+        this.echelle[1] = echelleY * f.echelleRelative;
     }
 
     public Forme_basic getForme() {
