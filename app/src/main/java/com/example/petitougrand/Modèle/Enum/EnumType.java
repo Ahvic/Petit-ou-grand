@@ -7,7 +7,8 @@ public enum EnumType {
     Rubis(4),
     Gemme(5),
     Croix(6),
-    Caché(0);
+    Caché(0),
+    Indic(0);
 
     public final int valeur;
 

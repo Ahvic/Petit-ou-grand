@@ -6,8 +6,6 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.util.Log;
-import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,12 +25,14 @@ import com.example.petitougrand.Vue.Formes.Carré;
 import com.example.petitougrand.Vue.Formes.Croix;
 import com.example.petitougrand.Vue.Formes.Forme_basic;
 import com.example.petitougrand.Vue.Formes.Gemme;
+import com.example.petitougrand.Vue.Formes.UI.Egal;
+import com.example.petitougrand.Vue.Formes.UI.Inferieur;
 import com.example.petitougrand.Vue.Formes.Pentagone;
 import com.example.petitougrand.Vue.Formes.Rubis;
 import com.example.petitougrand.Vue.Formes.Triangle;
 import com.example.petitougrand.Modèle.Objet;
-
-import static com.example.petitougrand.Modèle.Enum.EnumType.Caché;
+import com.example.petitougrand.Vue.Formes.UI.Superieur;
+import com.example.petitougrand.Vue.Formes.UI.Triangle_Indic;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
@@ -74,9 +74,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         float couleur_supérieur[] = { 0.00000000f, 1.00000000f, 0.00000000f, 1.0f };
         float couleur_pass[] = { 0.70000000f, 0.70000000f, 0.70000000f, 1.0f };
 
-        Bouton bouton_inférieur = new Bouton_Inférieur(new Carré(couleur_inférieur), EnumPlaceRender.Inférieur.position[0], EnumPlaceRender.Inférieur.position[1], 1.0f);
-        Bouton bouton_egal = new Bouton_Egal(new Carré(couleur_egal), EnumPlaceRender.Egal.position[0], EnumPlaceRender.Egal.position[1], 1.0f);
-        Bouton bouton_supérieur = new Bouton_Supérieur(new Carré(couleur_supérieur), EnumPlaceRender.Supérieur.position[0], EnumPlaceRender.Supérieur.position[1], 1.0f);
+        Bouton bouton_inférieur = new Bouton_Inférieur(new Inferieur(), EnumPlaceRender.Inférieur.position[0], EnumPlaceRender.Inférieur.position[1], 1.0f);
+        Bouton bouton_egal = new Bouton_Egal(new Egal(), EnumPlaceRender.Egal.position[0], EnumPlaceRender.Egal.position[1], 1.0f);
+        Bouton bouton_supérieur = new Bouton_Supérieur(new Superieur(), EnumPlaceRender.Supérieur.position[0], EnumPlaceRender.Supérieur.position[1], 1.0f);
         Bouton bouton_pass = new Bouton_Pass(new Carré(couleur_pass), EnumPlaceRender.Pass.position[0], EnumPlaceRender.Pass.position[1], 2.5f, 0.5f);
 
         objetsScenes.put("Inférieur", bouton_inférieur);
@@ -104,7 +104,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
         //Initialisation des objets dans la file d'attente
-
         for (objet_Attente objet: fileAttente) {
             Forme_basic forme;
             float echelle = 1.0f;
@@ -122,15 +121,18 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                     break;
                 case Croix: forme = new Croix();
                     break;
+                case Indic: forme = new Triangle_Indic();
+                    break;
                 default: forme = new Carré();
                     echelle = 0.0f;
                     break;
             }
 
             Objet obj = new Objet(forme, objet.coords[0], objet.coords[1], echelle);
-
             objetsScenes.put(objet.nom, obj);
         }
+
+        fileAttente.clear();
 
         //Deplacement des objets de la scene
         float[] scratch;
@@ -195,6 +197,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             case tas: place = EnumPlaceRender.tas.position;
                 break;
             case j_2: place = EnumPlaceRender.j_2.position;
+                break;
+            case indJ_1: place = EnumPlaceRender.indJ_1.position;
+                break;
+            case indJ_2: place = EnumPlaceRender.indJ_2.position;
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + emplacement);

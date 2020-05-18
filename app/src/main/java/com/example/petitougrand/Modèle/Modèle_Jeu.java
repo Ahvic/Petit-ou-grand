@@ -2,8 +2,10 @@ package com.example.petitougrand.Modèle;
 
 import android.util.Log;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.List;
 
 import com.example.petitougrand.Controler.Controleur;
@@ -12,19 +14,19 @@ import com.example.petitougrand.Modèle.Enum.EnumType;
 
 public class Modèle_Jeu {
 
-    private List<EnumType> tas;
-    private List<EnumType> paquet_J1;
-    private List<EnumType> paquet_J2;
-    private List<EnumType> paquet_temp;
+    private Deque<EnumType> tas;
+    private Deque<EnumType> paquet_J1;
+    private Deque<EnumType> paquet_J2;
+    private Deque<EnumType> paquet_temp;
     private int joueurActuel;
 
     private Controleur controleur;
 
     public Modèle_Jeu(Controleur controleur){
-        tas = new ArrayList<>();
-        paquet_J1 = new ArrayList<>();
-        paquet_J2 = new ArrayList<>();
-        paquet_temp = new ArrayList<>();
+        tas = new ArrayDeque<>();
+        paquet_J1 = new ArrayDeque<>();
+        paquet_J2 = new ArrayDeque<>();
+        paquet_temp = new ArrayDeque<>();
         this.controleur = controleur;
 
         InitiatisationPaquet();
@@ -32,7 +34,8 @@ public class Modèle_Jeu {
 
         controleur.sendRendererOrder(EnumPlace.j_1, EnumType.Caché);
         controleur.sendRendererOrder(EnumPlace.j_2, EnumType.Caché);
-        controleur.sendRendererOrder(EnumPlace.tas, tas.get(0));
+        controleur.sendRendererOrder(EnumPlace.tas, tas.getFirst());
+        controleur.sendRendererOrder(EnumPlace.indJ_1, EnumType.Indic);
 
         Log.e("DECK", debugPaquet());
     }
@@ -44,71 +47,52 @@ public class Modèle_Jeu {
      */
     public void ReceptionChoix(int pari) {
 
-        Log.e("DECK", "joueur: " + joueurActuel);
-
-        if(PariGagne(pari))
-            Log.e("DECK", "gagne");
-        else
-            Log.e("DECK", "perdu");
-
-        /*
         if (paquet_J1.size() > 0 && paquet_J2.size() > 0) {
-            if (pari == -1 || pari == 0 || pari == 1) {
-                if (PariGagne(pari)) {
-                    Log.e("DECK", "gagné");
-
-                    //On affiche la carte
-                    if (joueurActuel == 1) {
-                        controleur.sendRendererOrder(EnumPlace.j_1, paquet_J1.get(0));
-
-                        //On l'ajoute au tas_temp
-                        paquet_temp.add(paquet_J1.get(0));
-                        paquet_J1.remove(0);
-
-                    } else {
-                        controleur.sendRendererOrder(EnumPlace.j_2, paquet_J2.get(0));
-
-                        //On l'ajoute au tas_temp
-                        paquet_temp.add(paquet_J2.get(0));
-                        paquet_J2.remove(0);
-                    }
-
-                } else {
-                    Log.e("DECK", "perdu");
-
-                    //On remet toutes les cartes dans le paquet
-                    for (EnumType element : paquet_temp) {
-                        if(joueurActuel == 1)
-                            paquet_J1.add(element);
-                        else
-                            paquet_J2.add(element);
-
-                        paquet_temp.remove(element);
-                    }
-
-                    ChangementDeTour();
-                }
-            }
+            Log.e("DECK", debugPaquet());
 
             if (pari == -2) {
                 ChangementDeTour();
 
                 //Met les cart de paquet_temps sur le tas
-                for (EnumType element : paquet_temp) {
-                    tas.add(element);
-                    paquet_temp.remove(element);
+                for (int i = 0; i < paquet_temp.size(); i++) {
+                    tas.addFirst(paquet_temp.pop());
                 }
 
-                controleur.sendRendererOrder(EnumPlace.tas, tas.get(0));
+                controleur.sendRendererOrder(EnumPlace.tas, tas.getFirst());
+            }
+            else{
+                if (PariGagne(pari)) {
+                    //On affiche la carte
+                    if (joueurActuel == 1) {
+                        controleur.sendRendererOrder(EnumPlace.j_1, paquet_J1.getFirst());
+
+                        //On l'ajoute au tas_temp
+                        paquet_temp.add(paquet_J1.pop());
+                    } else {
+                        controleur.sendRendererOrder(EnumPlace.j_2, paquet_J2.getFirst());
+
+                        //On l'ajoute au tas_temp
+                        paquet_temp.add(paquet_J2.pop());
+                    }
+
+                } else {
+                    //On remet toutes les cartes dans le paquet
+                    for (int i = 0; i < paquet_temp.size(); i++) {
+                        if(joueurActuel == 1)
+                            paquet_J1.addLast(paquet_temp.pop());
+                        else
+                            paquet_J2.addLast(paquet_temp.pop());
+                    }
+
+                    ChangementDeTour();
+                }
             }
         }else{
+            //Si quelqu'un a gagné
             controleur.sendRendererOrder(EnumPlace.j_1, EnumType.Rubis);
             controleur.sendRendererOrder(EnumPlace.tas, EnumType.Rubis);
             controleur.sendRendererOrder(EnumPlace.j_2, EnumType.Rubis);
         }
-        */
-
-        Log.e("DECK", debugPaquet());
     }
 
     /**
@@ -140,7 +124,7 @@ public class Modèle_Jeu {
         //On mélange le deck
         Collections.shuffle(deck);
 
-        tas.add(deck.get(0));
+        tas.addFirst(deck.get(0));
         deck.remove(0);
 
         //Initialise les decks
@@ -148,9 +132,9 @@ public class Modèle_Jeu {
             EnumType carte = deck.get(i);
 
             if(i % 2 == 0)
-                paquet_J1.add(carte);
+                paquet_J1.addFirst(carte);
             else
-                paquet_J2.add(carte);
+                paquet_J2.addFirst(carte);
         }
     }
 
@@ -163,12 +147,12 @@ public class Modèle_Jeu {
      */
     private boolean PariGagne(int pari){
         EnumType carteJoueur;
-        EnumType carteTas = tas.get(0);;
+        EnumType carteTas = tas.getFirst();
 
         if(joueurActuel == 1)
-            carteJoueur = paquet_J1.get(0);
+            carteJoueur = paquet_J1.getFirst();
         else
-            carteJoueur = paquet_J2.get(0);
+            carteJoueur = paquet_J2.getFirst();
 
         if(pari == -1){
             if(carteJoueur.valeur < carteTas.valeur)
@@ -188,11 +172,20 @@ public class Modèle_Jeu {
         return false;
     }
 
+    /**
+     * Change le tour et met à jour l'affichage
+     */
     private void ChangementDeTour(){
-        if(joueurActuel == 1)
+        if(joueurActuel == 1) {
             joueurActuel = 2;
-        else
+            controleur.sendRendererOrder(EnumPlace.indJ_1, EnumType.Caché);
+            controleur.sendRendererOrder(EnumPlace.indJ_2, EnumType.Indic);
+        }
+        else {
             joueurActuel = 1;
+            controleur.sendRendererOrder(EnumPlace.indJ_1, EnumType.Indic);
+            controleur.sendRendererOrder(EnumPlace.indJ_2, EnumType.Caché);
+        }
     }
 
     /**
@@ -203,27 +196,12 @@ public class Modèle_Jeu {
     private String debugPaquet(){
         String resultat = "";
 
-        resultat += "\n \ntas: " + tas.get(0).name() + "\n";
-        resultat += "J_1: " + paquet_J1.get(0).name() + "\n";
-        resultat += "J_2: " + paquet_J2.get(0).name() + "\n";
+        resultat += "\n \ntas: " + tas.getFirst().name() + "\n";
+        resultat += "J_1: " + paquet_J1.getFirst().name() + "\n";
+        resultat += "J_2: " + paquet_J2.getFirst().name() + "\n";
 
-        return resultat;
-    }
-
-    public String toString(){
-        String resultat = "";
-
-        resultat += "tas taille: " + tas.size() + "\n";
-        for(int i = 0; i < tas.size(); i++)
-            resultat += tas.get(i).name() + "\n";
-
-        resultat += "paquet J1 taille: " + paquet_J1.size() + "\n";
-        for(int i = 0; i < paquet_J1.size(); i++)
-            resultat += paquet_J1.get(i).name() + "\n";
-
-        resultat += "paquet J2 taille: " + paquet_J2.size() + "\n";
-        for(int i = 0; i < paquet_J2.size(); i++)
-            resultat += paquet_J2.get(i).name() + "\n";
+        resultat += "carte restante J1: " + paquet_J1.size() + "\n";
+        resultat += "carte restante J2: " + paquet_J2.size() + "\n";
 
         return resultat;
     }

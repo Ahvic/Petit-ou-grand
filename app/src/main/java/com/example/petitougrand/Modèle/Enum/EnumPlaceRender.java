@@ -13,7 +13,9 @@ public enum EnumPlaceRender {
     Inférieur(new float[]{-3.5f, -7.0f}),
     Egal(new float[]{+0.0f, -7.0f}),
     Supérieur(new float[]{+3.5f, -7.0f}),
-    Pass(new float[]{+0.0f, -9.0f});
+    Pass(new float[]{+0.0f, -9.0f}),
+    indJ_1(new float[]{-3.0f, 5.0f}),
+    indJ_2(new float[]{+3.0f, 5.0f});
 
     public final float[] position;
 
